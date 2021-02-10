@@ -50,5 +50,28 @@ class DataBase {
     return _hospitais;
   }
 
+  Future<int> updateContact(Hospital hospital) async {
+    Database bd = await _recuperandoBancoDados();
+
+    Map<String, dynamic> dadosHospital = {
+      "nome": hospital.nome,
+      "endereco": hospital.endereco,
+      "foto": hospital.foto,
+      "especialidade": hospital.especialidade,
+      "numeroleitos": hospital.numeroLeitos
+    };
+
+    int id = await bd.update("HOSPITAIS", dadosHospital,
+        where: "id = ?", whereArgs: [hospital.id]);
+    print("Atualizado:  $id");
+
+    return id;
+  }
+
+  Future<int> deleteHospital(int id) async {
+    Database bd = await _recuperandoBancoDados();
+    return await bd.delete("HOSPITAIS", where: "id = ?", whereArgs: [id]);
+  }
+
   DataBase._internal();
 }

@@ -1,4 +1,5 @@
 class Hospital {
+  final int id;
   final String nome;
   final String endereco;
   final String foto = 'http://abre.ai/bmg7';
