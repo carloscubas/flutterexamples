@@ -37,8 +37,8 @@ class _MyAppState extends State<_Lista> {
                 color: Colors.white,
               ),
               onPressed: () async {
-                await Navigator.of(context).push(
-                    new MaterialPageRoute(builder: (context) => Cadastro()));
+                await Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (context) => Cadastro(null)));
 
                 setState(() {});
               },
@@ -61,6 +61,13 @@ class _MyAppState extends State<_Lista> {
                                   NetworkImage('${snapshot.data[index].foto}'),
                             ),
                             title: Text('${snapshot.data[index].nome}'),
+                            onTap: () async {
+                              await Navigator.of(context).push(
+                                  new MaterialPageRoute(
+                                      builder: (context) =>
+                                          Cadastro(snapshot.data[index].id)));
+                              setState(() {});
+                            },
                             subtitle:
                                 Text('${snapshot.data[index].especialidade}'),
                             trailing: Icon(Icons.keyboard_arrow_right));
@@ -70,12 +77,28 @@ class _MyAppState extends State<_Lista> {
 }
 
 class Cadastro extends StatelessWidget {
+  int id;
   final TextEditingController _controladorNome = TextEditingController();
   final TextEditingController _controladorEndereco = TextEditingController();
   final TextEditingController _controladorEspecialidade =
       TextEditingController();
   final TextEditingController _controladorNumeroLeitos =
       TextEditingController();
+
+  Hospital hospital;
+
+  Cadastro(id) {
+    if (id != null) {
+      var _hospital = DataBase.get(id);
+      _hospital.then((hp) {
+        hospital = hp;
+        _controladorNome.text = hospital.nome;
+        _controladorEndereco.text = hospital.endereco;
+        _controladorEspecialidade.text = hospital.especialidade;
+        _controladorNumeroLeitos.text = hospital.numeroleitos.toString();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,15 +133,22 @@ class Cadastro extends StatelessWidget {
               RaisedButton(
                 child: Text('Cadastrar'),
                 onPressed: () {
-                  final String nome = _controladorNome.text;
-                  final String endereco = _controladorEndereco.text;
-                  final String especialidade = _controladorEspecialidade.text;
-                  final int numeroLeitos =
-                      int.tryParse(_controladorNumeroLeitos.text);
-                  final Hospital hospitalNovo =
-                      Hospital(nome, endereco, especialidade, numeroLeitos);
-                  print(hospitalNovo);
-                  DataBase.salvar(hospitalNovo);
+                  if (hospital != null) {
+                    hospital.nome = _controladorNome.text;
+                    hospital.endereco = _controladorEndereco.text;
+                    hospital.especialidade = _controladorEspecialidade.text;
+                    hospital.numeroleitos =
+                        int.tryParse(_controladorNumeroLeitos.text);
+                    DataBase.update(hospital);
+                  } else {
+                    this.hospital = Hospital(
+                        this.id,
+                        _controladorNome.text,
+                        _controladorEndereco.text,
+                        _controladorEspecialidade.text,
+                        int.tryParse(_controladorNumeroLeitos.text));
+                    DataBase.salvar(hospital);
+                  }
                   Navigator.of(context).pop();
                 },
               )

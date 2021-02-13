@@ -30,7 +30,7 @@ class DataBase {
       "endereco": hospital.endereco,
       "foto": hospital.foto,
       "especialidade": hospital.especialidade,
-      "numeroleitos": hospital.numeroLeitos
+      "numeroleitos": hospital.numeroleitos
     };
 
     int id = await bd.insert("HOSPITAIS", dadosHospital);
@@ -43,14 +43,25 @@ class DataBase {
 
     var _hospitais = new List();
     for (var item in listaHospitais) {
-      Hospital hospital = new Hospital(item['nome'], item['endereco'],
-          item['especialidade'], item['numeroLeitos']);
+      Hospital hospital = new Hospital(item['id'], item['nome'],
+          item['endereco'], item['especialidade'], item['numeroleitos']);
       _hospitais.add(hospital);
     }
     return _hospitais;
   }
 
-  Future<int> updateContact(Hospital hospital) async {
+  static Future<Hospital> get(int id) async {
+    Database bd = await _recuperandoBancoDados();
+    var results = await bd.rawQuery('SELECT * FROM HOSPITAIS WHERE id = $id');
+
+    if (results.length > 0) {
+      return new Hospital.fromMap(results.first);
+    }
+
+    return null;
+  }
+
+  static Future<int> update(Hospital hospital) async {
     Database bd = await _recuperandoBancoDados();
 
     Map<String, dynamic> dadosHospital = {
@@ -58,7 +69,7 @@ class DataBase {
       "endereco": hospital.endereco,
       "foto": hospital.foto,
       "especialidade": hospital.especialidade,
-      "numeroleitos": hospital.numeroLeitos
+      "numeroleitos": hospital.numeroleitos
     };
 
     int id = await bd.update("HOSPITAIS", dadosHospital,
@@ -68,10 +79,12 @@ class DataBase {
     return id;
   }
 
+/*
   Future<int> deleteHospital(int id) async {
     Database bd = await _recuperandoBancoDados();
     return await bd.delete("HOSPITAIS", where: "id = ?", whereArgs: [id]);
   }
+  */
 
   DataBase._internal();
 }
