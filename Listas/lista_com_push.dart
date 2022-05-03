@@ -1,7 +1,3 @@
-// EXERCICIO 20/07/2020
-// LISTA DE HOSPITAIS
-// POR Izabela Leme
-
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -53,7 +49,7 @@ class MyApp extends StatelessWidget {
 
 class Endereco extends StatelessWidget{
   final String localizacao;
-  Endereco({Key key, @required this.localizacao}) : super(key: key);
+  Endereco({required this.localizacao});
   
   @override
   Widget build(BuildContext context) {
