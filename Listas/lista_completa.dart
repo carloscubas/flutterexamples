@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
 
 class Endereco extends StatelessWidget {
   final Hospital hospital;
-  Endereco({Key key, @required this.hospital}) : super(key: key);
+  Endereco({required this.hospital});
 
   @override
   Widget build(BuildContext context) {
