@@ -10,4 +10,12 @@ class BitcoinPriceModel {
     required this.description,
     required this.value,
   });
+
+  factory BitcoinPriceModel.fromJson(Map<String, dynamic> json) =>
+      BitcoinPriceModel(
+        code: json["code"],
+        symbol: json["symbol"],
+        description: json["description"],
+        value: json["rate_float"],
+      );
 }
