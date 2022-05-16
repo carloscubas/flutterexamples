@@ -21,9 +21,22 @@ class MyApp extends  State<_Lista> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Welcome to Flutter',
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Lista de Planetas'),
+          title: Text('Lista dinâmica'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              onPressed: () async {
+               _planetas.add(_planetas[0]);
+                setState(() {});
+              },
+            )
+          ],
         ),
         body: ListView.builder(
           itemCount: _planetas.length,
